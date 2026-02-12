@@ -448,7 +448,7 @@ class _FirebaseNotificationsHandlerState
     await _flutterLocalNotificationsPlugin
         ?.resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
-        ?.deleteNotificationChannel(channelId);
+        ?.deleteNotificationChannel(channelId: channelId);
   }
 
   static Future<void> createAndroidNotificationChannel(
@@ -529,7 +529,7 @@ class _FirebaseNotificationsHandlerState
     await _flutterLocalNotificationsPlugin
         ?.resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
-        ?.deleteNotificationChannelGroup(groupId);
+        ?.deleteNotificationChannelGroup(groupId: groupId);
   }
 
   static Future<List<AndroidNotificationChannel>?>
@@ -556,8 +556,6 @@ class _FirebaseNotificationsHandlerState
     Map<String, dynamic>? payload,
     TZDateTime? scheduledDateTime,
     bool shouldForceInitNotifications = false,
-    UILocalNotificationDateInterpretation?
-        uiLocalNotificationDateInterpretation,
     AndroidScheduleMode? androidScheduleMode,
     DateTimeComponents? matchDateTimeComponents,
   }) async {
@@ -570,10 +568,10 @@ class _FirebaseNotificationsHandlerState
     if (scheduledDateTime == null) {
       try {
         await _flutterLocalNotificationsPlugin!.show(
-          id,
-          title,
-          body,
-          notificationDetails,
+          id: id,
+          title: title,
+          body: body,
+          notificationDetails: notificationDetails,
           payload: payloadStr,
         );
       } catch (e, s) {
@@ -586,23 +584,16 @@ class _FirebaseNotificationsHandlerState
         'androidScheduleMode cannot be null when scheduledDateTime is not null',
       );
 
-      assert(
-        uiLocalNotificationDateInterpretation != null,
-        'uiLocalNotificationDateInterpretation cannot be null when scheduledDateTime is not null',
-      );
-
       try {
         await _flutterLocalNotificationsPlugin!.zonedSchedule(
-          id,
-          title,
-          body,
-          scheduledDateTime,
-          notificationDetails,
+          id: id,
+          title: title,
+          body: body,
+          scheduledDate: scheduledDateTime,
+          notificationDetails: notificationDetails,
           payload: payloadStr,
           androidScheduleMode: androidScheduleMode!,
           matchDateTimeComponents: matchDateTimeComponents,
-          uiLocalNotificationDateInterpretation:
-              uiLocalNotificationDateInterpretation!,
         );
       } catch (e, s) {
         log<FirebaseNotificationsHandler>(error: e, stackTrace: s);
@@ -691,7 +682,7 @@ class _FirebaseNotificationsHandlerState
 
     try {
       await _flutterLocalNotificationsPlugin!.initialize(
-        initializationSettings,
+        settings: initializationSettings,
         // TODO: onDidReceiveBackgroundNotificationResponse
         // onDidReceiveBackgroundNotificationResponse: ,
         onDidReceiveNotificationResponse: (details) {
